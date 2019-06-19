@@ -1,0 +1,175 @@
+https://baike.baidu.com/item/wscript.shell
+
+SpecialFolders
+SpecialFolders 属性提供 WshSpecialFolders 对象以便访问 Windows 的 shell 文件夹，例如桌面文件夹、开始菜单文件夹和个人文档文件夹。
+语法
+WshShell.SpecialFolders = objWshSpecialFolders
+示例
+1
+2
+3
+4
+'这段代码展示如何访问桌面文件夹
+Dim WshShell
+Set WshShell = CreateObject("WScript.Shell")
+MsgBox "Your desktop is " & WshShell.SpecialFolders("Desktop")
+WshSpecialFolders 对象
+该对象未直接给出。要得到 WshSpecialFolders 对象，请使用 WshShell.SpecialFolders 属性。
+下面描述与 WshSpecialFolders 对象关联的属性。
+属性 描述
+Item 指定文件夹的完整路径（默认）。
+Count 枚举项的数目。
+length 枚举项的数目 (JScript) 。
+WshSpecialFolders.Item
+Item 属性返回由 strFolderName 指定的文件夹的完整路径。它是默认属性。
+语法
+WshShell.SpecialFolders.Item("strFolderName") = strFolderPath
+WshShell.SpecialFolders("strFolderName") = strFolderPath
+注释
+若请求的文件夹 (strFolderName) 不可用，则 WshShell.SpecialFolders("strFolderName") 返回 NULL。例如，Windows 95 没有 AllUsersDesktop 文件夹，如果 strFolderName = AllUsersDesktop，则返回 NULL。
+Windows 95 和 Windows NT 4.0操作系统提供下列指定文件夹：
+AllUsersDesktop
+AllUsersStartMenu
+AllUsersPrograms
+AllUsersStartup
+Desktop
+Favorites
+Fonts
+MyDocuments
+NetHood
+PrintHood
+Programs
+Recent
+SendTo
+StartMenu
+Startup
+Templates
+示例
+1
+2
+3
+4
+5
+6
+Dim WshShell, StrMyDesktop
+Set WshShell = CreateObject("WScript.Shell") '创建对象是wshell对象，不要和wscript对象混了
+StrMyDesktop = WshShell.SpecialFolders("Desktop") '这段返回完整的Windows桌面文件夹路径，这段可以不要
+For Each strFolder In WshShell.SpecialFolders '遍历所有特殊文件夹，这里的SpecialFolders是属性
+    MsgBox strFolder '显示所有特殊文件夹
+Next
+CreateShortcut
+CreateShortcut 方法创建 WshShortcut 对象并将其返回。如果快捷方式标题以 .url 结尾，就会创建 WshURLShortcut 对象。
+语法
+WshShell.CreateShortcut(strPathname) = objShortcut
+示例
+1
+2
+3
+4
+5
+6
+7
+8
+9
+'这段代码创建一个指向当前执行脚本的快捷方式
+Dim WshShell, oShellLink, oUrlLink
+Set WshShell = CreateObject("WScript.Shell")
+Set oShellLink = WshShell.CreateShortcut("CurrentScript.lnk")
+oShellLink.TargetPath = Wscript.ScriptFullName
+oShellLink.Save
+Set oUrlLink = WshShell.CreateShortcut("MicrosoftWebSite.URL")
+oUrlLink.TargetPath = "http://..." '输入网站 URL
+oUrlLink.Save
+WshShortcut 对象
+该对象未直接给出。要获得 WshShortcut 对象，请使用 WshShell.CreateShortcut 方法。
+下面说明和 WshShortcut 对象有关的属性。
+属性 说明
+Arguments 快捷方式对象的参数。
+Description 快捷方式对象的说明。
+Hotkey 快捷方式对象的热键。
+IconLocation 快捷方式对象的图标位置。
+TargetPath 快捷方式对象的目标路径。
+WindowStyle 快捷方式对象的窗口样式。
+WorkingDirectory 快捷方式对象的工作目录。
+下面说明与 WshShortcut 对象有关的方法。
+方法 说明
+Save 将快捷方式存储到指定的文件系统中。
+WshShortcut.Arguments
+Arguments 属性提供快捷方式对象的参数。
+语法
+WshShortcut.Arguments = strArguments
+WshShortcut.Description
+Description 属性提供快捷方式对象的说明。
+语法
+WshShortcut.Description = strDescription
+WshShortcut.Hotkey
+HotKey 属性提供快捷方式对象的热键。热键是启动或切换程序的键盘快捷方式。
+语法
+WshShortcut.HotKey = strHotKey
+注释
+strHotKey 的BNF语法如下：
+Hotkey ::= modifier* keyname
+modifier ::= "ALT+" | "CTRL+" | "SHIFT+" | "EXT+"
+keyname ::= "A" .. "Z" |
+"0".. "9" |
+"Back" | "Tab" | "Clear" | "Return" |
+"Escape" | "Space" | "Prior" | ...
+所有键的名称都可以在 WINUSER.H 中找到。热键不区分大小写。
+热键只能激活位于 Windows 桌面或 Windows“开始”菜单的快捷方式。
+Windows 资源管理器不接受 ESC、ENTER、TAB、SPACE、PRINT SCREEN 或 BACKSPACE，即使 WshShortcut.Hotkey 遵循 Win32 API 支持它们。因此，建议在快捷方式中不要用这些键。
+示例
+1
+2
+3
+4
+5
+6
+7
+Dim WshShell, strDesktop, oMyShortcut
+Set WshShell = CreateObject("WScript.Shell")
+strDesktop = WshShell.SpecialFolders("Desktop")
+Set oMyShortcut = WshShell.CreateShortcut(strDesktop & "\a_key.lnk")
+OMyShortcut.TargetPath = "%windir%\notepad.exe"
+oMyShortCut.Hotkey = "ALT+CTRL+F"
+oMyShortCut.Save
+WshShortcut.IconLocation
+IconLocation 属性提供快捷方式对象的图标位置。图标位置的格式应为 "Path,index"。
+语法
+WshShortcut.IconLocation = strIconLocation
+WshShortcut.TargetPath
+TargetPath 属性提供快捷方式对象的目标路径。
+语法
+WshShortcut.TargetPath = strTargetPath
+WshShortcut.WindowStyle
+WindowStyle 属性提供快捷方式对象的窗口样式。
+语法
+WshShortcut.WindowStyle = natWindowStyle
+WshShortcut.WorkingDirectory
+WorkingDirectory 为一个快捷方式对象提供工作目录。
+语法
+WshShortcut.WorkingDirectory = strWorkingDirectory
+WshShortcut.Save
+Save 方法把快捷方式对象保存到由 FullName 属性指定的位置。
+语法
+WshShortcut.Save
+WshUrlShortcut 对象
+该对象未直接给出。要获取 WshUrlShortcut 对象，可使用 WshShell.CreateShortcut 方法。
+下表说明了和 WshUrlShortcut 对象有关的属性。
+属性 说明
+FullName URL 快捷方式对象的完整路径。
+TargetPath URL 快捷方式对象的目标路径。
+下表说明了和 WshUrlShortcut 对象有关的方法。
+方法 说明
+Save 将快捷方式保存到指定的文件系统中。
+WshUrlShortcut.FullName
+FullName 属性提供快捷方式对象的完整路径。
+语法
+WshUrlShortcut.FullName = strFullName
+WshUrlShortcut.TargetPath
+TargetPath 属性提供快捷方式对象的目标路径。
+语法
+WshUrlShortcut.TargetPath = strTargetPath
+WshUrlShortcut.Save
+Save 方法保存一个快捷方式，该快捷方式指向 FullName 属性指定的位置。
+语法
+WshUrlShortcut.Save
